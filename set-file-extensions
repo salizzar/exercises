@@ -1,0 +1,32 @@
+#! /usr/bin/env ruby
+
+require 'optparse'
+
+options = { 'extension' => nil }
+
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: set-file-extensions [options]"
+  opts.on('-E', '--extension EXTENSION', 'File Extension') do |extension|
+    options[:extension] = extension
+  end
+end
+
+parser.parse!
+
+unless options[:extension].nil?
+  extension = options[:extension]
+
+  unless extension.size == 3 and extension.to_s[0].chr != '.'
+    puts "Invalid input. A three character extension is required."
+    exit(19)
+  end
+
+  Dir['/var/dump/files/*'].each do |file|
+    file_name = "#{File.basename(file, File.extname(file))}.#{extension}"
+    file_path = File.join(File.dirname(file), file_name)
+    puts file_path
+
+    File.rename(file, file_path)
+  end
+end
+
