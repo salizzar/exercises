@@ -18,7 +18,7 @@ unless options[:file].nil?
 
   unless File.exists?(file_path)
     puts "File not exists."
-    exit
+    exit(1)
   end
 
   lines = File.readlines(file_path)
